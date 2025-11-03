@@ -26,7 +26,9 @@ const allowedOrigins = [
   'chrome-extension://*',
   'devtools://devtools',
   'ws://localhost:*',
-  'http://localhost:*'
+  'http://localhost:*',
+  'https://gg-railway-production.up.railway.app',
+  'https://seu-frontend.railway.app'  // Substitua pelo domínio real do seu frontend
 ];
 
 // Configuração do CORS
