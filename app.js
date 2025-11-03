@@ -23,18 +23,12 @@ const allowedOrigins = [
   'http://localhost:5173',
   'ionic://localhost',
   'http://localhost:4200',
-  'http://127.0.0.1:8100',
-  'http://127.0.0.1:3000',
-  'http://127.0.0.1:8080',
-  'http://127.0.0.1:5173',
-  'http://127.0.0.1:4200',
   'chrome-extension://*',
   'devtools://devtools',
   'ws://localhost:*',
   'http://localhost:*',
   'https://gg-railway-production.up.railway.app',
-  'https://seu-frontend.railway.app',
-  'http://localhost:5000'  // Adicionado para o servidor CrewAI local
+  'https://seu-frontend.railway.app'  // Substitua pelo domínio real do seu frontend
 ];
 
 // Configuração do CORS
@@ -42,25 +36,16 @@ app.use(cors({
   origin: function(origin, callback) {
     // Em desenvolvimento, permita todas as origens
     if (process.env.NODE_ENV !== 'production') {
-      console.log('Permitindo origem em desenvolvimento:', origin);
       return callback(null, true);
     }
     
     // Em produção, verifique as origens permitidas
-    if (!origin || allowedOrigins.some(allowedOrigin => {
-      if (allowedOrigin.includes('*')) {
-        return origin.startsWith(allowedOrigin.replace('*', ''));
-      }
-      return origin === allowedOrigin;
-    })) {
-      console.log('Permitindo origem em produção:', origin);
+    if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
     
-    console.log('Origem não permitida:', origin);
-    return callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
+    return callback(new Error('Not allowed by CORS'));
   },
-  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Cache-Control', 'Pragma', 'Expires', 'DevTools-Request-Id'],
   credentials: true,

@@ -10,20 +10,7 @@ from litellm.exceptions import RateLimitError
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(__name__)
-# Configuração do CORS para permitir requisições do frontend
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "http://localhost:8100", 
-            "http://127.0.0.1:8100",
-            "https://seu-frontend.railway.app",  # Substitua pelo domínio real do seu frontend
-            "http://localhost:3000",
-            "http://localhost:5173"
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:8100", "http://127.0.0.1:8100"]}})
 
 # Criar um RateLimiter compatível
 class AppRateLimiter:
