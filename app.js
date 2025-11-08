@@ -15,6 +15,7 @@ const port = process.env.PORT || 3000;
 
 // Configuração do CORS
 const allowedOrigins = [
+  // Local development
   'http://localhost:8100',
   'capacitor://localhost',
   'http://localhost',
@@ -27,8 +28,21 @@ const allowedOrigins = [
   'devtools://devtools',
   'ws://localhost:*',
   'http://localhost:*',
+  
+  // Production URLs
   'https://gg-railway-production.up.railway.app',
-  'https://seu-frontend.railway.app'  // Substitua pelo domínio real do seu frontend
+  'https://gg-railway-production.up.railway.app/*',
+  'https://*.up.railway.app',
+  'capacitor://*',
+  'http://*',
+  'https://*',
+  
+  // Android app
+  'file://*',
+  'http://*',
+  'https://*',
+  'capacitor://*',
+  'ionic://*'
 ];
 
 // Configuração do CORS
