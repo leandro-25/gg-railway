@@ -48,24 +48,39 @@ const allowedOrigins = [
 // Configuração do CORS
 app.use(cors({
   origin: function(origin, callback) {
-    // Em desenvolvimento, permita todas as origens
-    if (process.env.NODE_ENV !== 'production') {
+    // Em desenvolvimento ou se for uma requisição do aplicativo Android (sem origin)
+    if (process.env.NODE_ENV !== 'production' || !origin) {
       return callback(null, true);
     }
     
-    // Em produção, verifique as origens permitidas
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    // Verifica se a origem está na lista de permitidas
+    const allowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes('*')) {
+        const regex = new RegExp(allowedOrigin.replace('*', '.*'));
+        return regex.test(origin);
+      }
+      return origin === allowedOrigin;
+    });
     
-    return callback(new Error('Not allowed by CORS'));
+    if (allowed) {
+      return callback(null, true);
+    } else {
+      console.log('Origem bloqueada pelo CORS:', origin);
+      return callback(new Error('Not allowed by CORS'));
+    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Cache-Control', 'Pragma', 'Expires', 'DevTools-Request-Id'],
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
+  // Adiciona headers CORS manualmente
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 600 // tempo em segundos para o navegador armazenar a resposta de preflight
 }));
+
+// Middleware para lidar com requisições OPTIONS (preflight)
+app.options('*', cors());
 
 // Configuração de CSP para desenvolvimento
 app.use((req, res, next) => {
